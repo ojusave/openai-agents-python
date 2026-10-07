@@ -17,6 +17,8 @@ def test_requested_optional_extra_imports_from_its_standalone_environment() -> N
         "litellm": "agents.extensions.models.litellm_model",
         "realtime": "agents.realtime",
         "redis": "agents.extensions.memory.redis_session",
+        # Adapter imports are lazy, so importing them alone cannot prove the extra is installed.
+        "render": "render",
         "s3": "boto3",
         "sqlalchemy": "agents.extensions.memory.sqlalchemy_session",
         "viz": "agents.extensions.visualization",
@@ -26,6 +28,28 @@ def test_requested_optional_extra_imports_from_its_standalone_environment() -> N
 
     assert module.__file__ is not None
     assert "site-packages" in Path(module.__file__).parts
+
+    if optional_extra == "render":
+        adapters = [
+            importlib.import_module(name)
+            for name in (
+                "agents.extensions.sandbox",
+                "agents.extensions.sandbox.render",
+                "agents.extensions.sandbox.render.sandbox",
+            )
+        ]
+        for adapter in adapters:
+            assert adapter.__file__ is not None
+            assert "site-packages" in Path(adapter.__file__).parts
+        for name in (
+            "RenderSandboxClient",
+            "RenderSandboxClientOptions",
+            "RenderSandboxSession",
+            "RenderSandboxSessionState",
+        ):
+            for adapter in adapters[:2]:
+                assert name in adapter.__all__
+                assert getattr(adapter, name) is getattr(adapters[2], name)
 
 
 @pytest.mark.parametrize(

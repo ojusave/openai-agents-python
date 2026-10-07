@@ -2753,6 +2753,9 @@ realtime = [
 redis = [
     { name = "redis" },
 ]
+render = [
+    { name = "render" },
+]
 runloop = [
     { name = "runloop-api-client" },
 ]
@@ -2866,6 +2869,7 @@ requires-dist = [
     { name = "pymongo", marker = "extra == 'mongodb'", specifier = ">=4.14" },
     { name = "python-multipart", specifier = ">=0.0.31" },
     { name = "redis", marker = "extra == 'redis'", specifier = ">=7" },
+    { name = "render", marker = "extra == 'render'", specifier = ">=1.2.0,<2" },
     { name = "requests", specifier = ">=2.0,<3" },
     { name = "runloop-api-client", marker = "extra == 'runloop'", specifier = ">=1.16.0,<2.0.0" },
     { name = "sqlalchemy", extras = ["asyncio"], marker = "extra == 'sqlalchemy'", specifier = ">=2.0" },
@@ -2879,7 +2883,7 @@ requires-dist = [
     { name = "websockets", marker = "extra == 'realtime'", specifier = ">=15.0,<17" },
     { name = "websockets", marker = "extra == 'voice'", specifier = ">=15.0,<17" },
 ]
-provides-extras = ["voice", "viz", "litellm", "any-llm", "realtime", "sqlalchemy", "encrypt", "redis", "dapr", "mongodb", "docker", "blaxel", "daytona", "cloudflare", "e2b", "modal", "runloop", "vercel", "s3", "temporal"]
+provides-extras = ["voice", "viz", "litellm", "any-llm", "realtime", "sqlalchemy", "encrypt", "redis", "dapr", "mongodb", "docker", "blaxel", "daytona", "cloudflare", "e2b", "modal", "runloop", "render", "vercel", "s3", "temporal"]
 
 [package.metadata.requires-dev]
 dev = [
@@ -3883,6 +3887,21 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/be/6c/d51204e28e7bc54f9a03bb799b04730d7e54ff2718862b8d4e09e7110a6a/regex-2025.7.34-cp314-cp314-win32.whl", hash = "sha256:f978ddfb6216028c8f1d6b0f7ef779949498b64117fc35a939022f67f810bdcb", size = 269730, upload-time = "2025-07-31T00:20:42.253Z" },
     { url = "https://files.pythonhosted.org/packages/74/52/a7e92d02fa1fdef59d113098cb9f02c5d03289a0e9f9e5d4d6acccd10677/regex-2025.7.34-cp314-cp314-win_amd64.whl", hash = "sha256:4b7dc33b9b48fb37ead12ffc7bdb846ac72f99a80373c4da48f64b373a7abeae", size = 278640, upload-time = "2025-07-31T00:20:44.42Z" },
     { url = "https://files.pythonhosted.org/packages/d1/78/a815529b559b1771080faa90c3ab401730661f99d495ab0071649f139ebd/regex-2025.7.34-cp314-cp314-win_arm64.whl", hash = "sha256:4b8c4d39f451e64809912c82392933d80fe2e4a87eeef8859fcc5380d0173c64", size = 271757, upload-time = "2025-07-31T00:20:46.355Z" },
+]
+
+[[package]]
+name = "render"
+version = "1.2.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "aiohttp" },
+    { name = "attrs" },
+    { name = "httpx" },
+    { name = "python-dateutil" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/5b/7f/ff8b32177bfa6b3b80de4a70066e3010f64dfee67b3856ddd9375278faaf/render-1.2.0.tar.gz", hash = "sha256:2186c32f7179719f71f2d9c4fbbbb3aa754417d3d1f07ad7ad0dfa2f2a56b011", size = 470393, upload-time = "2026-09-23T21:45:53.134Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/82/43/69fedb0bb7e296b48e83acb3438caee181442b870fc2b0dc1e57fdf915b4/render-1.2.0-py3-none-any.whl", hash = "sha256:15d11ff29d2dfa306cc899757cae9db98dc749f4d8c22bd295ee854fcdfa0104", size = 939520, upload-time = "2026-09-23T21:45:51.58Z" },
 ]
 
 [[package]]

@@ -29,6 +29,7 @@ OPTIONAL_EXTRAS = (
     "redis",
     "viz",
     "s3",
+    "render",
 )
 STRICT_PROFILES = frozenset({"containers", "release", "security"})
 LOCAL_ONLY_CREDENTIAL_CLASS = "local-only"

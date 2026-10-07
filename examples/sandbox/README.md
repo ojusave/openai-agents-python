@@ -27,7 +27,7 @@ Most examples call a model through `Runner`, so set `OPENAI_API_KEY` in the repo
 
 ## Cloud backend examples
 
-Cloud-provider examples live under [`extensions/`](./extensions/). They cover E2B, Modal, and Daytona sandbox backends and require provider-specific credentials in addition to `OPENAI_API_KEY`.
+See the [cloud backend setup guide](./extensions/README.md) for provider-specific examples and credentials. To try Render, follow the [Render setup and run instructions](./extensions/README.md#render). These examples require provider credentials in addition to `OPENAI_API_KEY`.
 
 ## Tutorial scaffold
 

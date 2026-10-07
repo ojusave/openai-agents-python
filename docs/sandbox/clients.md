@@ -149,10 +149,53 @@ For provider-specific setup notes and links for the checked-in extension example
 | `DaytonaSandboxClient` | `openai-agents[daytona]` | [Daytona runner](https://github.com/openai/openai-agents-python/blob/main/examples/sandbox/extensions/daytona/daytona_runner.py) |
 | `E2BSandboxClient` | `openai-agents[e2b]` | [E2B runner](https://github.com/openai/openai-agents-python/blob/main/examples/sandbox/extensions/e2b_runner.py) |
 | `ModalSandboxClient` | `openai-agents[modal]` | [Modal runner](https://github.com/openai/openai-agents-python/blob/main/examples/sandbox/extensions/modal_runner.py) |
+| `RenderSandboxClient` | `openai-agents[render]` | [Render runner](https://github.com/openai/openai-agents-python/blob/main/examples/sandbox/extensions/render_runner.py) |
 | `RunloopSandboxClient` | `openai-agents[runloop]` | [Runloop runner](https://github.com/openai/openai-agents-python/blob/main/examples/sandbox/extensions/runloop/runner.py) |
 | `VercelSandboxClient` | `openai-agents[vercel]` | [Vercel runner](https://github.com/openai/openai-agents-python/blob/main/examples/sandbox/extensions/vercel_runner.py) |
 
 </div>
+
+### Run agents in Render Sandboxes
+
+The client runs commands and manages workspace files in a [Render Sandbox](https://render.com/docs/sandboxes). Your application runs the agent through `Runner`, and the client manages the sandbox in your Render workspace.
+
+Install the Render client dependencies:
+
+```bash
+pip install "openai-agents[render]"
+```
+
+Set these environment variables in the application process:
+
+- `OPENAI_API_KEY`: the OpenAI key used for model requests.
+- `RENDER_API_KEY`: a Render API key with access to the selected workspace.
+- `RENDER_WORKSPACE_ID`: the Render workspace ID.
+
+Keep both API keys outside `Manifest.environment`. See the [Render Python SDK reference](https://render.com/docs/sandboxes-sdk-python) for credential setup.
+
+To try the companion example, run this command from the root of an OpenAI Agents SDK repository checkout:
+
+```bash
+uv run --extra render python -m examples.sandbox.extensions.render_runner
+```
+
+The example supplies a README through a manifest, asks the agent to create `outputs/hello.txt`, and verifies the file contents through the sandbox client before cleanup. A successful run prints `Verified: outputs/hello.txt contains RENDER_AGENTS_SDK_OK`.
+
+[`RenderSandboxClientOptions`](../ref/extensions/sandbox/render/sandbox.md#agents.extensions.sandbox.render.sandbox.RenderSandboxClientOptions) accepts these settings:
+
+| Option | Default | Meaning |
+| --- | --- | --- |
+| `timeout_seconds` | `900` | Maximum sandbox lifetime in seconds. |
+| `startup_timeout_seconds` | `120` | Maximum wait for the sandbox to become ready, in seconds. |
+| `network_policy` | `"allow-all"` | Use `"deny-all"` to block outbound network traffic from the sandbox. |
+
+Command timeouts are separate from sandbox lifetime. Pass a timeout duration in seconds to `session.exec(timeout=...)`. A command timeout, cancellation, or broken execution stream terminates the entire sandbox, interrupting other work in that sandbox.
+
+Retrieve outputs before closing the owning session, which terminates the sandbox. Use `async with RenderSandboxClient() as client` or call `await client.close()` after all sessions have been cleaned up to release the provider HTTP connections.
+
+The client supports non-interactive commands and file operations. It rejects interactive terminals, exposed ports, storage mounts, manifest users/groups, and user overrides.
+
+To preserve workspace files after sandbox termination, configure an SDK snapshot store such as `LocalSnapshotSpec`. The session's `stop()` method saves a workspace archive, and the client's `resume()` method can restore that archive into a replacement sandbox. Restoration rejects symlink archive members. The client does not use Render-native snapshots.
 
 ### Size Modal sandboxes
 

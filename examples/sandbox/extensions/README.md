@@ -6,7 +6,7 @@ They intentionally keep the flow simple:
 
 1. Build a tiny manifest in memory.
 2. Create a `SandboxAgent` that inspects that workspace through one shell tool.
-3. Run the agent against E2B, Modal, Daytona, Cloudflare, Runloop, Blaxel, or Vercel.
+3. Run the agent against E2B, Modal, Daytona, Cloudflare, Runloop, Blaxel, Vercel, or [Render](#render).
 
 All of these examples require `OPENAI_API_KEY`, because they call the model through the normal `Runner` path. Each cloud backend also needs its own provider credentials.
 
@@ -351,3 +351,51 @@ The runner also includes standalone demos for individual features. Pass
 - `drive` -- [Blaxel Drive mount](https://docs.blaxel.ai/Agent-drive/Overview) (persistent storage, requires `--drive-name`)
 
 Blaxel sandboxes support cloud bucket mounts (S3, R2, GCS) through `BlaxelCloudBucketMountStrategy` and persistent drive mounts through `BlaxelDriveMountStrategy`. See the [Blaxel Drive docs](https://docs.blaxel.ai/Agent-drive/Overview) for details.
+
+## Render
+
+### Setup
+
+This example runs an agent in [Render Sandboxes](https://render.com/docs/sandboxes). Install the Render dependencies from the repository root:
+
+```bash
+uv sync --extra render
+```
+
+Set these environment variables in the shell that runs the example:
+
+- `OPENAI_API_KEY`: the OpenAI key used for model requests.
+- `RENDER_API_KEY`: a Render API key with access to the selected workspace.
+- `RENDER_WORKSPACE_ID`: the Render workspace ID.
+
+Keep both API keys outside the sandbox manifest. See the [Render Python SDK reference](https://render.com/docs/sandboxes-sdk-python) for provider credentials.
+
+### Run
+
+From the repository root:
+
+```bash
+uv run --extra render python -m examples.sandbox.extensions.render_runner
+```
+
+The example supplies a README through a manifest and asks the agent to create `outputs/hello.txt`. It reads the file through the sandbox client and checks its contents before cleanup. A successful run prints `Verified: outputs/hello.txt contains RENDER_AGENTS_SDK_OK`.
+
+The example terminates the sandbox on completion or handled failure. The configured 900-second lifetime also limits how long the sandbox can run after an application crash.
+
+### Options and lifecycle
+
+`RenderSandboxClientOptions` accepts these settings:
+
+| Option | Default | Meaning |
+| --- | --- | --- |
+| `timeout_seconds` | `900` | Maximum sandbox lifetime in seconds. |
+| `startup_timeout_seconds` | `120` | Maximum wait for the sandbox to become ready, in seconds. |
+| `network_policy` | `"allow-all"` | Use `"deny-all"` to block outbound network traffic from the sandbox. |
+
+Command timeouts are separate from sandbox lifetime. Pass a timeout duration in seconds to `session.exec(timeout=...)`. A command timeout, cancellation, or broken execution stream terminates the entire sandbox, interrupting other work in that sandbox.
+
+Retrieve outputs before closing the owning session, which terminates the sandbox. Use `async with RenderSandboxClient() as client` or call `await client.close()` after all sessions have been cleaned up to release the provider HTTP connections.
+
+The client supports non-interactive commands and file operations. It rejects interactive terminals, exposed ports, storage mounts, manifest users/groups, and user overrides.
+
+To preserve workspace files after sandbox termination, configure an SDK snapshot store such as `LocalSnapshotSpec`. The session's `stop()` method saves a workspace archive, and the client's `resume()` method can restore that archive into a replacement sandbox. Restoration rejects symlink archive members. The client does not use Render-native snapshots.

@@ -139,6 +139,54 @@
       "name": "ModalSandboxClientOptions"
     },
     {
+      "canonical_module": "agents.extensions.sandbox.render",
+      "canonical_name": "RenderSandboxClient",
+      "module": "agents.extensions.sandbox",
+      "name": "RenderSandboxClient"
+    },
+    {
+      "canonical_module": "agents.extensions.sandbox.render",
+      "canonical_name": "RenderSandboxClientOptions",
+      "module": "agents.extensions.sandbox",
+      "name": "RenderSandboxClientOptions"
+    },
+    {
+      "canonical_module": "agents.extensions.sandbox.render",
+      "canonical_name": "RenderSandboxSession",
+      "module": "agents.extensions.sandbox",
+      "name": "RenderSandboxSession"
+    },
+    {
+      "canonical_module": "agents.extensions.sandbox.render",
+      "canonical_name": "RenderSandboxSessionState",
+      "module": "agents.extensions.sandbox",
+      "name": "RenderSandboxSessionState"
+    },
+    {
+      "canonical_module": "agents.extensions.sandbox.render.sandbox",
+      "canonical_name": "RenderSandboxClient",
+      "module": "agents.extensions.sandbox.render",
+      "name": "RenderSandboxClient"
+    },
+    {
+      "canonical_module": "agents.extensions.sandbox.render.sandbox",
+      "canonical_name": "RenderSandboxClientOptions",
+      "module": "agents.extensions.sandbox.render",
+      "name": "RenderSandboxClientOptions"
+    },
+    {
+      "canonical_module": "agents.extensions.sandbox.render.sandbox",
+      "canonical_name": "RenderSandboxSession",
+      "module": "agents.extensions.sandbox.render",
+      "name": "RenderSandboxSession"
+    },
+    {
+      "canonical_module": "agents.extensions.sandbox.render.sandbox",
+      "canonical_name": "RenderSandboxSessionState",
+      "module": "agents.extensions.sandbox.render",
+      "name": "RenderSandboxSessionState"
+    },
+    {
       "canonical_module": "agents.extensions.sandbox.runloop",
       "canonical_name": "RunloopAfterIdle",
       "module": "agents.extensions.sandbox",
@@ -449,6 +497,14 @@
         "VercelSandboxSession": "vercel",
         "VercelSandboxSessionState": "vercel"
       }
+    },
+    "agents.extensions.sandbox.render": {
+      "optional_bindings": {},
+      "optional_exports": {}
+    },
+    "agents.extensions.sandbox.render.sandbox": {
+      "optional_bindings": {},
+      "optional_exports": {}
     },
     "agents.realtime.testing": {
       "optional_bindings": {},

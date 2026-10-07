@@ -68,6 +68,7 @@ def test_extra_credential_examples_are_skipped_in_default_auto_runs(
         "examples/sandbox/extensions/daytona/usaspending_text2sql/agent.py",
         "examples/sandbox/extensions/e2b_runner.py",
         "examples/sandbox/extensions/modal_runner.py",
+        "examples/sandbox/extensions/render_runner.py",
         "examples/sandbox/extensions/runloop/capabilities.py",
         "examples/sandbox/extensions/runloop/runner.py",
     ]
@@ -83,6 +84,8 @@ def test_extra_credential_examples_are_skipped_in_default_auto_runs(
         "E2B_API_KEY",
         "MODAL_TOKEN_ID",
         "MODAL_TOKEN_SECRET",
+        "RENDER_API_KEY",
+        "RENDER_WORKSPACE_ID",
         "RUNLOOP_API_KEY",
         "POSTGRES_PASSWORD",
     ):

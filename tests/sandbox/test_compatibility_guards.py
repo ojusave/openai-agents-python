@@ -300,6 +300,15 @@ def test_core_sandbox_public_export_surface_is_stable() -> None:
             },
         ),
         (
+            "agents.extensions.sandbox.render",
+            {
+                "RenderSandboxClient",
+                "RenderSandboxClientOptions",
+                "RenderSandboxSession",
+                "RenderSandboxSessionState",
+            },
+        ),
+        (
             "agents.extensions.sandbox.runloop",
             {
                 "DEFAULT_RUNLOOP_WORKSPACE_ROOT",
@@ -348,6 +357,24 @@ def test_extension_sandbox_package_export_surfaces_are_stable(
     assert set(module.__all__) == expected_exports
     for name in expected_exports:
         assert getattr(module, name) is not None
+
+
+@pytest.mark.parametrize(
+    "name",
+    [
+        "RenderSandboxClient",
+        "RenderSandboxClientOptions",
+        "RenderSandboxSession",
+        "RenderSandboxSessionState",
+    ],
+)
+def test_render_sandbox_public_imports_preserve_identity(name: str) -> None:
+    import agents.extensions.sandbox as extensions
+    import agents.extensions.sandbox.render as render
+    import agents.extensions.sandbox.render.sandbox as implementation
+
+    assert name in extensions.__all__
+    assert getattr(extensions, name) is getattr(render, name) is getattr(implementation, name)
 
 
 def test_sandbox_dataclass_constructor_field_order_is_stable() -> None:
@@ -479,6 +506,11 @@ def test_optional_sandbox_dataclass_constructor_field_order_is_stable(
                 "exposed_ports",
                 "exposed_port_url_ttl_s",
             ),
+        ),
+        (
+            "agents.extensions.sandbox.render",
+            "RenderSandboxClientOptions",
+            ("timeout_seconds", "startup_timeout_seconds", "network_policy"),
         ),
         (
             "agents.extensions.sandbox.runloop",
@@ -705,6 +737,25 @@ def test_optional_sandbox_client_options_positional_field_order_is_stable(
             ),
         ),
         (
+            "agents.extensions.sandbox.render",
+            "RenderSandboxSessionState",
+            (
+                "type",
+                "session_id",
+                "snapshot",
+                "manifest",
+                "exposed_ports",
+                "snapshot_fingerprint",
+                "snapshot_fingerprint_version",
+                "workspace_root_ready",
+                "sandbox_id",
+                "owner_id",
+                "timeout_seconds",
+                "startup_timeout_seconds",
+                "network_policy",
+            ),
+        ),
+        (
             "agents.extensions.sandbox.runloop",
             "RunloopSandboxSessionState",
             (
@@ -798,6 +849,7 @@ def test_sandbox_session_state_field_order_is_stable(
             "cloudflare",
         ),
         ("agents.extensions.sandbox.daytona", "DaytonaSandboxClientOptions", (), "daytona"),
+        ("agents.extensions.sandbox.render", "RenderSandboxClientOptions", (), "render"),
         ("agents.extensions.sandbox.runloop", "RunloopSandboxClientOptions", (), "runloop"),
         ("agents.extensions.sandbox.vercel", "VercelSandboxClientOptions", (), "vercel"),
     ],
@@ -854,6 +906,18 @@ def test_optional_sandbox_client_options_json_round_trip_preserves_type(
             "agents.extensions.sandbox.blaxel",
             "BlaxelSandboxSessionState",
             {"sandbox_name": "sandbox-123"},
+        ),
+        (
+            "agents.extensions.sandbox.render",
+            "RenderSandboxSessionState",
+            {
+                "sandbox_id": "sbx-test",
+                "owner_id": "tea-test",
+                "timeout_seconds": 300,
+                "startup_timeout_seconds": 60,
+                "network_policy": "deny-all",
+                "exposed_ports": (),
+            },
         ),
         (
             "agents.extensions.sandbox.runloop",
@@ -916,6 +980,8 @@ def test_core_discriminator_type_strings_are_stable() -> None:
         ("agents.sandbox.sandboxes.unix_local", "UnixLocalSandboxSessionState", "unix_local"),
         ("agents.sandbox.sandboxes.docker", "DockerSandboxClientOptions", "docker"),
         ("agents.sandbox.sandboxes.docker", "DockerSandboxSessionState", "docker"),
+        ("agents.extensions.sandbox.render", "RenderSandboxClientOptions", "render"),
+        ("agents.extensions.sandbox.render", "RenderSandboxSessionState", "render"),
     ],
 )
 def test_optional_sandbox_discriminator_type_strings_are_stable(
